@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="eight_pixels">8dp</dimen>
+    <dimen name="sixteen_pixels">16dp</dimen>
+    <dimen name="twenty_four_pixels">24dp</dimen>
+    <dimen name="thirty_two_pixels">32dp</dimen>
+    <dimen name="default_icon_size">48dp</dimen>
+</resources>

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Remote Jobs</string>
+    <string name="generic_error_text">An error occurred!</string>
+    <string name="search_bar_hint">Search remote jobs...</string>
+    <string name="position_name">Position: %1$s</string>
+    <string name="company_name">Listing Company: %1$s</string>
 </resources>
