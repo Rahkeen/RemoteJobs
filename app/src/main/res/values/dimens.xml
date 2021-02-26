@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="zero">0dp</dimen>
+    <dimen name="one_pixel">1dp</dimen>
     <dimen name="eight_pixels">8dp</dimen>
     <dimen name="sixteen_pixels">16dp</dimen>
     <dimen name="twenty_four_pixels">24dp</dimen>

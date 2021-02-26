@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-// TODO: Consider allowing this class to take in an integer for the getItemCount function.
 class RemoteJobsAdapter(context: Context, remoteJobs: List<RemoteJob>): RecyclerView.Adapter<RemoteJobsViewHolder>() {
 
     private val adapterContext = context

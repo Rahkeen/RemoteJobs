@@ -4,4 +4,5 @@
     <string name="search_bar_hint">Search remote jobs...</string>
     <string name="position_name">Position: %1$s</string>
     <string name="company_name">Listing Company: %1$s</string>
+    <string name="empty"></string>
 </resources>

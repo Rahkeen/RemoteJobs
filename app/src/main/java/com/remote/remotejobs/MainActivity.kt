@@ -1,19 +1,19 @@
 package com.remote.remotejobs
 
+import android.app.Activity
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.GET
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,10 +33,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeViews() {
-        editText = findViewById(R.id.ersatz_search_bar)
+        editText = findViewById<EditText>(R.id.ersatz_search_bar).apply {
+            setOnFocusChangeListener { v, hasFocus ->
+                if(hasFocus) {
+                    editText.setText(R.string.empty)
+                } else {
+                    // Hides keyboard if focus is relinquished.
+                    (context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
+                        hideSoftInputFromWindow(v.windowToken,0)
+                    }
+                }
+            }
+        }
         searchIcon = findViewById<ImageView>(R.id.search_bar_icon).apply {
             setOnClickListener {
-                fetchJobs()
+                fetchJobs(editText.text.toString())
             }
         }
     }
@@ -64,12 +75,15 @@ class MainActivity : AppCompatActivity() {
         remoteService = retrofit.create(RemoteJobsService::class.java)
     }
 
-    private fun fetchJobs() {
-        remoteService.getRemoteJobs().subscribe({
-            (remoteJobsList.adapter as RemoteJobsAdapter).jobs = it.jobs
-           remoteJobsList.adapter?.notifyDataSetChanged()
+    private fun fetchJobs(position: String) {
+        //TODO: Add a spinner or something to indicate that an API call is being made.
+        remoteService.getRemoteJobs(position).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({
+            remoteJobsList.adapter?.apply {
+                (this as RemoteJobsAdapter).jobs = it.jobs
+                this.notifyDataSetChanged()
+            }
         },{
-            Toast.makeText(this, R.string.generic_error_text, Toast.LENGTH_SHORT)
+            Toast.makeText(this, R.string.generic_error_text, Toast.LENGTH_SHORT).show()
         })
     }
 }
