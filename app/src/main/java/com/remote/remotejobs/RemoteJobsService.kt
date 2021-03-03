@@ -7,7 +7,7 @@ import retrofit2.http.Query
 interface RemoteJobsService {
     @GET("remote-jobs?limit=20")
     fun getRemoteJobs(
-        @Query("search")
-        search: String
+        @Query("category")
+        category: String
     ): Single<JobWrapper>
 }
