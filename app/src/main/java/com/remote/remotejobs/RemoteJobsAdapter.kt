@@ -1,18 +1,14 @@
 package com.remote.remotejobs
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 
-class RemoteJobsAdapter(context: Context, remoteJobs: List<RemoteJob>, manager: FragmentManager): RecyclerView.Adapter<RemoteJobsViewHolder>() {
-
-    private val adapterContext = context
-    var jobs = remoteJobs
-    var fragManager = manager
+class RemoteJobsAdapter(
+    var jobs: List<RemoteJob>,
+) : RecyclerView.Adapter<RemoteJobsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RemoteJobsViewHolder {
         val xCell = LayoutInflater.from(parent.context).inflate(R.layout.cell_jobs_remote, parent, false)
@@ -31,9 +27,9 @@ class RemoteJobsAdapter(context: Context, remoteJobs: List<RemoteJob>, manager: 
 
 // Set up the view here.
 // This will take in an inflated view.
-class RemoteJobsViewHolder(view: View): RecyclerView.ViewHolder(view) {
-    private var jobTextView: TextView = itemView.findViewById(R.id.job_name_text_view)
-    private var companyTextView: TextView = itemView.findViewById(R.id.company_name_text_view)
+class RemoteJobsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private val jobTextView: TextView = itemView.findViewById(R.id.job_name_text_view)
+    private val companyTextView: TextView = itemView.findViewById(R.id.company_name_text_view)
 
     fun bind(job: RemoteJob) {
         jobTextView.text = job.title
