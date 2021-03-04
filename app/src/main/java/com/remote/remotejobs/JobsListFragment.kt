@@ -2,6 +2,7 @@ package com.remote.remotejobs
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,9 +23,10 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 class JobsListFragment : Fragment() {
 
+    private var remoteJobs: List<RemoteJob> = emptyList()
+    private lateinit var recyclerAdapter: RemoteJobsAdapter
     private lateinit var remoteJobsList: RecyclerView
     private lateinit var remoteService: RemoteJobsService
-    private var remoteJobs: List<RemoteJob> = emptyList()
 
     private lateinit var editText: EditText
     private lateinit var searchIcon: ImageView
@@ -40,6 +43,7 @@ class JobsListFragment : Fragment() {
         initializeViews(view)
         configureRecyclerView(view)
         configureRetrofit()
+        // findNavController() // Used to find an instance of navigation controller, can be used with views, activities, or fragments.
     }
 
     private fun initializeViews(view: View) {
@@ -58,8 +62,6 @@ class JobsListFragment : Fragment() {
         progressBar = view.findViewById(R.id.progress_bar)
         searchIcon = view.findViewById<ImageView>(R.id.search_bar_icon).apply {
             setOnClickListener {
-                // Show a progress bar once the call begins.
-                progressBar.visibility = View.VISIBLE
                 fetchJobs(editText.text.toString())
             }
         }
@@ -74,15 +76,16 @@ class JobsListFragment : Fragment() {
                 // This is the default value for orientation, but I wanted to practice using apply.
                 orientation = LinearLayoutManager.VERTICAL
             }
-            fragmentManager?.let {
-                adapter = RemoteJobsAdapter(context = context, remoteJobs = remoteJobs, manager = it)
+            recyclerAdapter = RemoteJobsAdapter(remoteJobs = remoteJobs) {
+                findNavController().navigate(R.id.action_jobsListFragment_to_detailViewFragment)
             }
+            adapter = recyclerAdapter
         }
     }
 
     // Configure retrofit
     private fun configureRetrofit() {
-        var retrofit = Retrofit.Builder()
+        val retrofit = Retrofit.Builder()
                 .baseUrl("https://remotive.io/api/")
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // Converts retrofit call, into any RxJava return type (single, observable, completable, flowable...)
                 .addConverterFactory(MoshiConverterFactory.create()) // Converts JSON into Model and vise versa
@@ -93,10 +96,17 @@ class JobsListFragment : Fragment() {
     }
 
     private fun fetchJobs(position: String) {
-        remoteService.getRemoteJobs(position).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({
-            remoteJobsList.adapter?.apply {
+        remoteService.getRemoteJobs(position)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                // Show a progress bar once the call begins.
+                progressBar.visibility = View.VISIBLE
+            }
+            .subscribe({
+            recyclerAdapter.apply {
                 progressBar.visibility = View.GONE // Hide the progress bar after the call is over.
-                (this as RemoteJobsAdapter).jobs = it.jobs
+                this.remoteJobs = it.jobs
                 this.notifyDataSetChanged()
             }
         },{

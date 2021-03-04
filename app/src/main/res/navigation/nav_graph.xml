@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/jobsListFragment">
+
+    <fragment
+        android:id="@+id/detailViewFragment"
+        android:name="com.remote.remotejobs.DetailViewFragment"
+        android:label="DetailViewFragment" />
+    <fragment
+        android:id="@+id/jobsListFragment"
+        android:name="com.remote.remotejobs.JobsListFragment"
+        android:label="JobsListFragment" >
+        <action
+            android:id="@+id/action_jobsListFragment_to_detailViewFragment"
+            app:destination="@id/detailViewFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
+    </fragment>
+</navigation>
