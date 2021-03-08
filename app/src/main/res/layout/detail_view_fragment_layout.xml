@@ -8,12 +8,54 @@
     <TextView
         android:id="@+id/test_text_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="This is some text."
-        android:gravity="center_horizontal|center_vertical"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/twenty_four_pixels"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/eight_pixels"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/salary_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:layout_marginBottom="@dimen/eight_pixels"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/description_text_view"
+        />
+
+
+    <TextView
+        android:id="@+id/description_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/description"
+        android:textSize="@dimen/twenty_four_pixels"
+        android:gravity="start"
+        android:layout_marginStart="@dimen/eight_pixels"
+        android:layout_marginEnd="@dimen/eight_pixels"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/job_description_edit_text"
+        />
+
+    <EditText
+        android:id="@+id/job_description_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/description_edit_text_height"
+        android:inputType="none"
+        android:focusable="false"
+        android:layout_margin="@dimen/eight_pixels"
+        android:padding="@dimen/eight_pixels"
+        android:gravity="start"
+        android:background="@drawable/grey_border"
+        android:text="This is a bunch of filler text that I wanted to put here for the purposes of the checking out whether this actually looks as I intend it to."
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 

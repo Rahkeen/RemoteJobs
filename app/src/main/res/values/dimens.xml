@@ -7,4 +7,7 @@
     <dimen name="twenty_four_pixels">24dp</dimen>
     <dimen name="thirty_two_pixels">32dp</dimen>
     <dimen name="default_icon_size">48dp</dimen>
+    <dimen name="description_edit_text_height">206dp</dimen>
+    <dimen name="border_background_stroke_width">2dp</dimen>
+    <dimen name="large_text_size">24sp</dimen>
 </resources>

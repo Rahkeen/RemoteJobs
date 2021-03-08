@@ -8,7 +8,12 @@
     <fragment
         android:id="@+id/detailViewFragment"
         android:name="com.remote.remotejobs.DetailViewFragment"
-        android:label="DetailViewFragment" />
+        android:label="DetailViewFragment" >
+        <argument
+            android:name="position"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
     <fragment
         android:id="@+id/jobsListFragment"
         android:name="com.remote.remotejobs.JobsListFragment"

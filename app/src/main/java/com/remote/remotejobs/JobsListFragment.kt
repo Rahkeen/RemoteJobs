@@ -12,10 +12,12 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -24,9 +26,11 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class JobsListFragment : Fragment() {
 
     private var remoteJobs: List<RemoteJob> = emptyList()
+    private lateinit var viewMod: RemoteJobsViewModel
     private lateinit var recyclerAdapter: RemoteJobsAdapter
     private lateinit var remoteJobsList: RecyclerView
     private lateinit var remoteService: RemoteJobsService
+    private lateinit var jobsObserver: Observer<List<RemoteJob>>
 
     private lateinit var editText: EditText
     private lateinit var searchIcon: ImageView
@@ -35,6 +39,13 @@ class JobsListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
+        viewMod = (activity as MainActivity).remoteJobsViewModel
+        jobsObserver = Observer<List<RemoteJob>> {
+            recyclerAdapter.remoteJobs = it
+            recyclerAdapter.notifyDataSetChanged()
+            progressBar.visibility = View.INVISIBLE
+        }
+        viewMod.remoteJobsList.observeForever(jobsObserver)
         return inflater.inflate(R.layout.jobs_list_fragment_layout, container, false)
     }
 
@@ -42,8 +53,13 @@ class JobsListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initializeViews(view)
         configureRecyclerView(view)
-        configureRetrofit()
+        // configureRetrofit()
         // findNavController() // Used to find an instance of navigation controller, can be used with views, activities, or fragments.
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewMod.remoteJobsList.removeObserver(jobsObserver)
     }
 
     private fun initializeViews(view: View) {
@@ -62,7 +78,9 @@ class JobsListFragment : Fragment() {
         progressBar = view.findViewById(R.id.progress_bar)
         searchIcon = view.findViewById<ImageView>(R.id.search_bar_icon).apply {
             setOnClickListener {
-                fetchJobs(editText.text.toString())
+                progressBar.visibility = View.VISIBLE
+                viewMod.fetchJobs(editText.text.toString())
+                //fetchJobs(editText.text.toString())
             }
         }
     }
